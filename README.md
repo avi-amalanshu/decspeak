@@ -1,6 +1,6 @@
 # decspeak
 
-A command-line tool for extracting English words (or their suffixes) that can be mapped entirely to digits using a customizable leet/dec-speak substitution map. Supports suffixes i.e. suffixes of words that can be spelled in such a manner, useful for cheap 1.111B xyz domains (e.g. ass.355317.xyz : ASSESSED :: succ.355317.xyz : SUCCESSED). Can be extended to support more general mappings by messing with the regex and altering the map sanity check. 
+A command-line tool for extracting English words (or their suffixes) that can be mapped entirely to digits using a customizable leet/dec-speak substitution map. Supports suffixes i.e. suffixes of words that can be spelled in such a manner, useful for cheap [1.111B xyz domains](https://gen.xyz/1111b) (e.g. `ass.355317.xyz` : ASSESSED :: `succ.355317.xyz` : SUCCESSED). Can be extended to support more general mappings by messing with the regex and altering the map sanity check. 
 
 ## Features
 
@@ -22,10 +22,10 @@ cd decspeak
 ## Usage
 
 ```bash
-python words.py -i  [OPTIONS]
+python words.py --input <url> [OTHER OPTIONS]
 ```
 
-### Common Options
+### Options
 
 ```bash
   -i, --input URL_OR_PATH      Path or HTTP(S) URL of a newline-separated word list  [required]
@@ -33,9 +33,10 @@ python words.py -i  [OPTIONS]
   --minlen MIN                 Minimum length of numeric string to include         [default: 6]
   --maxlen MAX                 Maximum length of numeric string to include         [default: 9]
   -w, --workers N              Number of parallel workers (defaults to CPU count)
-  -o, --output FILE            Output YAML filename (defaults to __.yaml)
+  -o, --output FILE            Output YAML filename
+
   -v, --verbose                Print results to console as well as file
-  --subs-file PATH             Path to custom substitution map in YAML format
+  --subs_file PATH             Path to custom substitution map in YAML format
 ```
 
 ### Example: Full-word Mapping
@@ -58,7 +59,7 @@ python words.py \
   --mode suffix \
   --minlen 6 \
   --maxlen 9 \
-  --subs-file my_subs.yaml
+  --subs_file my_subs.yaml
 ```
 
 ## Custom Substitution Map
@@ -77,7 +78,7 @@ d: "17"
 r: "12"
 ```
 
-Pass it via `--subs-file my_subs.yaml`. Keys must be single lowercase letters; values are digit strings.
+Pass it via `--subs_file my_subs.yaml`. Keys must be single lowercase letters; values are digit strings.
 
 ## Output Format
 
