@@ -3,29 +3,12 @@ import yaml
 import requests
 from argparse import ArgumentParser
 from multiprocessing import Pool, cpu_count
+from string import ascii_lowercase
 
 # -----------------------------------------------------------------------------
 # default substitution map
 # -----------------------------------------------------------------------------
-subs = {
-#    'for': '4', 
-#    'four': '4',
-#    'to':  '2',
-#    'ate': '8', 
-#    'ten': '10',
-#    'g':   '6',
-    'o':   '0', 
-    's':   '5',
-#    't':   '7', 
-    'a':   '4', 
-    'b':   '8',
-    'e':   '3', 
-    'i':   '1',
-#    'm':  '44',
-    'd':  '17',
-#    'y':   '7',
-    'r':  '12',
-}
+# moved into main().
 
 KEYS_BY_LEN = sorted(subs.keys(), key=len, reverse=True)
 PATTERN = re.compile(
@@ -36,7 +19,7 @@ def replace_string(s: str) -> str:
     return PATTERN.sub(lambda m: subs[m.group(0)], s)
 
 # -----------------------------------------------------------------------------
-# Argument parsing & word loading
+# argument parsing & word loading
 # -----------------------------------------------------------------------------
 def parse_args():
     p = ArgumentParser(
@@ -56,6 +39,8 @@ def parse_args():
                    help="output YAML filename (defaults to <mode>_<minlen>_<maxlen>.yaml)")
     p.add_argument("-v","--verbose", action="store_true",
                    help="verbose (prints output to console)")
+    p.add_argument("s", "--subs_file",
+                   help="path to a .yaml file containing the desired substitution map")
     return p.parse_args()
 
 def load_words(source):
@@ -136,6 +121,32 @@ def process_word(args):
 # -----------------------------------------------------------------------------
 def main():
     args = parse_args()
+    subs = {
+    #    'for': '4', 
+    #    'four': '4',
+    #    'to':  '2',
+    #    'ate': '8', 
+    #    'ten': '10',
+    #    'g':   '6',
+        'o':   '0', 
+        's':   '5',
+    #    't':   '7', 
+        'a':   '4', 
+        'b':   '8',
+        'e':   '3', 
+        'i':   '1',
+    #    'm':  '44',
+        'd':  '17',
+    #    'y':   '7',
+        'r':  '12',
+    }
+    if args.subs_file:
+        try:
+            subs = yaml.safe_load(args,subs_file)
+            if not (subs.keys() <= set(ascii_lowercase)):
+                raise ValueError('Malformed substitution map. Expected keys to be lowercase characters.')
+        except Exception as e:
+            print(f'using default substitution map, got exception:\n\t{e}')
 
     with Pool(args.workers) as pool:
         tasks = (
